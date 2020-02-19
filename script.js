@@ -1,4 +1,3 @@
-let previousPageURL = '';
 let nextPageURL = '';
 let currentID = '1';
 let maxPagesNumber = 0;
@@ -24,9 +23,7 @@ function getServersData(url){
 function loadList(url){
 	let mainArr = [];
 	let loadPokemonsList = getServersData(url);
-	loadPokemonsList.then(function(value){
-		//console.log(value);
-		previousPageURL = value.previous;		
+	loadPokemonsList.then(function(value){				
 		nextPageURL = value.next;		
 		let arr = value.results;		
 		mainArr = arr.map(arr => [arr.name]);		
@@ -58,8 +55,7 @@ function loadList(url){
 
 		let arrAbilities = resultArr.map(resultArr => resultArr.abilities);		
 		let divList = document.createElement('div');
-		divList.id = currentID;
-		//console.log(divList.id); 
+		divList.id = currentID;		 
 		for (let i=0; i<arrAbilities.length; i++){
 			let newLi = document.createElement('li');
 			let h2 = document.createElement('h2');
@@ -85,6 +81,12 @@ next.onclick = function(){
 			location.hash = changeCurrentID(1);			
 			loadList(nextPageURL);
 		}
+	} else {
+		if (+currentID < maxPagesNumber){
+			document.getElementById(currentID).style.display = 'none';
+			location.hash = changeCurrentID(1);
+			document.getElementById(currentID).style.display = 'block';
+		};  
 	};
 };
 
