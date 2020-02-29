@@ -23,7 +23,8 @@ function getServersData(url){
 function loadList(url){
 	let mainArr = [];
 	let loadPokemonsList = getServersData(url);
-	loadPokemonsList.then(function(value){				
+	loadPokemonsList.then(function(value){
+		console.log(value);				
 		nextPageURL = value.next;		
 		let arr = value.results;		
 		mainArr = arr.map(arr => [arr.name]);		
@@ -32,24 +33,30 @@ function loadList(url){
 		for(let i=0; i<arrURL.length; i++){
 		 	arrPromises.push(getServersData(arrURL[i]));		
 		};
+		console.log(arrPromises);
 		return Promise.all(arrPromises);	
 	}).then(function(resultArr){		
-
+		console.log(resultArr)
 		// create and return list (ul) one pokemons abilities
 		function getUlAbilities(arr){ 
 			let abilitiesUl = document.createElement('ul');
 			let arrOnePokemonsAbil = arr.map(arr => arr.ability);			
 			let arrAbilUrl = arrOnePokemonsAbil.map(arrOnePokemonsAbil => [arrOnePokemonsAbil.url]);				
 			for (j=0; j<arrAbilUrl.length; j++){
+				console.log('start iteration '+j);
 				let temp = arrAbilUrl[j];
-				let shortAbilArr = getServersData(temp).then(function(val){					
+				let shortAbilArr = getServersData(temp).then(function(val){
+					console.log('entered then '+j);					
 					let abilityText = val.name + ":     " + val.effect_entries[0]["short_effect"] + ";";				
 					let abilityLi = document.createElement('li');
 					let text = document.createTextNode(abilityText);
 					abilityLi.append(text);
-					abilitiesUl.append(abilityLi);							
+					abilitiesUl.append(abilityLi);
+					console.log('completed then '+j);							
 				});
+				console.log('completed iteration '+j);
 			};
+			console.log('completed function');
 			return abilitiesUl;		
 		};
 
